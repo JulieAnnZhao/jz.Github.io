@@ -1,37 +1,42 @@
-## Welcome to GitHub Pages
+"""
+Created on Mon Jan  6 15:10:01 2020
 
-You can use the [editor on GitHub](https://github.com/JulieAnnZhao/jz.Github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+@author: yanzhao
+"""
+import datetime #as dt  
+import numpy as np
+from netCDF4 import Dataset  # http://code.google.com/p/netcdf4-python/
+import matplotlib.pyplot as plt
+import os
+import matplotlib.dates as md
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+nc_f = '/Users/yanzhao/Downloads/otn200_20160405_60_delayed_78fb_eab6_050a.nc'
+nc_fid = Dataset(nc_f, 'r')
 
-### Markdown
+date = nc_fid.variables['time'][:] #x axis
+lats = nc_fid.variables['latitude'][:] 
+lons = nc_fid.variables['longitude'][:] 
+temp = nc_fid.variables['temperature'][:]
+sali = nc_fid.variables['salinity'][:]
+dens = nc_fid.variables['density'][:]
+depth = nc_fid.variables['depth'][:]  #y axis
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+# add date object for plotting
+DATE = []
+for row in date:
+    DATE.append(datetime.datetime.fromtimestamp(row))
 
-```markdown
-Syntax highlighted code block
+# Make plot
+fig, ax1 = plt.subplots(1) # a one graph contains all variables is needed
+plt.scatter(date,depth, c=temp)#s=15,c=temp,marker='o', edgecolor='none') #plt.scatter(x, y, s=area, c=colors, alpha)
+plt.ylim((-0.5,max(depth)+5))
+ax1.set_ylim(ax1.get_ylim()[::-1]) 
+cbar = plt.colorbar(orientation='horizontal', extend='both')  #specify mappable object
+xfmt = md.DateFormatter('%Hh\n%dd\n%b')  #formatter, set the display format of time
+ax1.xaxis.set_major_formatter(xfmt)   #set formatter of major ticker
+cbar.ax.set_xlabel('Temperature ($^\circ$C)')
+plt.title('Glider transect')  #label the plotting
+plt.ylabel('Depth (m)')
+plt.xlabel('Temperature')
+plt.show()
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/JulieAnnZhao/jz.Github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
