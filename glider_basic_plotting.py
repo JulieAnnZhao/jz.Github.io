@@ -22,14 +22,16 @@ temp = nc_fid.variables['temperature'][:]
 sali = nc_fid.variables['salinity'][:]
 dens = nc_fid.variables['density'][:]
 depth = nc_fid.variables['depth'][:]  #y axis
-
+dens = nc_fid.variables['density'][:]
 
 # Make plot
 #1. date-pres-temp plotting
 goods=np.argwhere(temp.filled()>-5)
 tempgd=temp[goods]
 dategd=date[goods]
+saligd=sali[goods]
 presgd=pres[goods]
+densgd=dens[goods]
 
 DATE=[]
 for row in dategd:
@@ -51,7 +53,6 @@ plt.ylabel('Pressure (dbar)')
 plt.xlabel('Temperature')
 
 #2. date-salinity-temp plotting
-saligd=sali[goods]
 
 
 scatter=plt.scatter(DATE,presgd,c=saligd)
@@ -74,7 +75,7 @@ plt.xlabel('Salinity')
 
 
 #3. date-density-temp plotting
-densgd=dens[goods]
+
 
 scatter = plt.scatter(DATE,presgd,c=densgd)
 ax1 = scatter.axes
@@ -138,8 +139,22 @@ plt.xlabel('Longitude (degrees_east)')
 
 
 
+#######################################
+#dpdt graph
+#######################################
 
-
+#split x into two parts, >0 and <0
+dpdt=0*presgd
+dpdt[2:(len(presgd)-2)]=(presgd[3:(len(presgd)-1)]-presgd[1:(len(presgd)-3)])/(dategd[3:(len(dategd)-1)]-dategd[1:(len(dategd)-3)])
+x=dpdt[2:(len(presgd)-2)]
+xind1=np.argwhere(x>0)
+xind2=np.argwhere(x<0)
+dpdt1=x[xind1]
+dens1=densgd[xind1]
+dpdt2=x[xind2]
+dens2=densgd[xind2]
+plt.scatter(dens1,dpdt1)  #dpdt>0, downcast
+plt.scatter(dens2,dpdt2)  #dpdt<0, upcast
 
 
 
