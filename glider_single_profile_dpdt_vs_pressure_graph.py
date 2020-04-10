@@ -113,7 +113,7 @@ profnum1 = np.asarray(profnum1)
 
 
 
-##upcast dpdt for single isopycnal
+##upcast dpdt vs. pressure for single isopycnal
 
 #adjust figure size
 plt.rcParams["figure.figsize"] = (30,15)
