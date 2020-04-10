@@ -178,4 +178,30 @@ plt.savefig(f_namefig2, bbox_inches='tight')
 plt.show()
 
 
+#####################################################################################################
+#####################################################################################################
+
+
+#dpdt value of specific isopycnal compared with its smoothed line
+
+#dpdt value of specific isopycnal compared with its smoothed line
+plt.rcParams["figure.figsize"] = (30,15)
+plt.plot(DATE2,dpdtgrids2d_anom[30,1:-1],linewidth=1)  #original line
+
+
+#smooth blue line
+bsmooth=smooth(dpdtgrids2d_anom[30,1:-1],9)
+plt.plot(DATE2,bsmooth,color='red',linewidth=2)    #smoothed line 
+
+#label the graph
+plt.title('dpdt at '+str(int(sgrid[30]))+' isopycnal & smoothed dpdt graph'+ " "+dm2+"-"+dn2,size=30)
+plt.xlabel('Date',size=30)
+plt.ylabel('dpdt (dbar/s)',size=30)
+plt.xticks(size = 25)
+plt.yticks(size = 30)
+
+#save figure
+plt.savefig(f_namefig5, bbox_inches='tight')
+plt.show()
+
 
